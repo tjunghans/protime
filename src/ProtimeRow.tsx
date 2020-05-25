@@ -34,13 +34,13 @@ export class ProtimeRow extends React.Component<ProtimeRowProps> {
           />
         </td>
         <td>
-          <span>{totalDays}</span>
+          <div>{totalDays}</div>
         </td>
         <td>
-          <span>{fullDays}</span>
+          <div>{fullDays}</div>
         </td>
         <td>
-          <span>{Math.round(Number(hours) * 100) / 100}</span>
+          <div>{Math.round(Number(hours) * 100) / 100}</div>
         </td>
         <td>
           <button

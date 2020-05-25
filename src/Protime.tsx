@@ -56,6 +56,34 @@ export class Protime extends React.Component<{}, ProtimeState> {
       }
     );
 
+    const totalPercent = calculatedProjectTimes.reduce(
+      (totalPercent, { percent }) => {
+        return totalPercent + Number(percent);
+      },
+      0
+    );
+
+    const totalTotalDays = calculatedProjectTimes.reduce(
+      (totalTotalDays, { totalDays }) => {
+        return totalTotalDays + Number(totalDays);
+      },
+      0
+    );
+
+    const totalFullDays = calculatedProjectTimes.reduce(
+      (totalFullDays, { fullDays }) => {
+        return totalFullDays + Number(fullDays);
+      },
+      0
+    );
+
+    const totalHours =
+      Math.round(
+        calculatedProjectTimes.reduce((totalHours, { hours }) => {
+          return totalHours + Number(hours);
+        }, 0) * 100
+      ) / 100;
+
     return (
       <div className="Protime">
         <form className="pure-form">
@@ -123,35 +151,18 @@ export class Protime extends React.Component<{}, ProtimeState> {
                 <tr>
                   <td>Totals</td>
                   <td>
-                    {calculatedProjectTimes.reduce(
-                      (totalPercent, { percent }) => {
-                        return totalPercent + Number(percent);
-                      },
-                      0
-                    )}
+                    <div className={totalPercent !== 100 ? "invalid" : ""}>
+                      {totalPercent}
+                    </div>
                   </td>
                   <td>
-                    {calculatedProjectTimes.reduce(
-                      (totalTotalDays, { totalDays }) => {
-                        return totalTotalDays + Number(totalDays);
-                      },
-                      0
-                    )}
+                    <div>{totalTotalDays}</div>
                   </td>
                   <td>
-                    {calculatedProjectTimes.reduce(
-                      (totalFullDays, { fullDays }) => {
-                        return totalFullDays + Number(fullDays);
-                      },
-                      0
-                    )}
+                    <div>{totalFullDays}</div>
                   </td>
                   <td>
-                    {Math.round(
-                      calculatedProjectTimes.reduce((totalHours, { hours }) => {
-                        return totalHours + Number(hours);
-                      }, 0) * 100
-                    ) / 100}
+                    <div>{totalHours}</div>
                   </td>
                 </tr>
               </tfoot>
