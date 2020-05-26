@@ -4,6 +4,15 @@
     width: 700px;
     margin: 0 auto;
   }
+
+  div button {
+    margin: 0;
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
   tfoot {
     font-weight: bold;
     td:nth-of-type(-n + 2) {
@@ -23,14 +32,19 @@
     td:nth-of-type(5) {
       div {
         text-align: right;
+        width: 60px;
       }
+    }
+
+    td:nth-of-type(1) input {
+      min-width: 150px;
+    }
+    td:nth-of-type(2) input {
+      width: 150px;
     }
   }
 
   .config {
-    :nth-child(n + 1) {
-      margin-left: 5px;
-    }
     margin-bottom: 30px;
   }
 

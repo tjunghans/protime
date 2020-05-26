@@ -1,6 +1,7 @@
 import React from "react";
 import "./Protime.scss";
 import { ProtimeRow } from "./ProtimeRow";
+import { round } from "./utils";
 
 export interface ProjectTime {
   name: string;
@@ -63,12 +64,12 @@ export class Protime extends React.Component<{}, ProtimeState> {
       0
     );
 
-    const totalTotalDays = calculatedProjectTimes.reduce(
+    const totalTotalDays = round(calculatedProjectTimes.reduce(
       (totalTotalDays, { totalDays }) => {
         return totalTotalDays + Number(totalDays);
       },
       0
-    );
+    ), 2);
 
     const totalFullDays = calculatedProjectTimes.reduce(
       (totalFullDays, { fullDays }) => {
@@ -77,41 +78,45 @@ export class Protime extends React.Component<{}, ProtimeState> {
       0
     );
 
-    const totalHours =
-      Math.round(
-        calculatedProjectTimes.reduce((totalHours, { hours }) => {
-          return totalHours + Number(hours);
-        }, 0) * 100
-      ) / 100;
+    const totalHours = round(
+      calculatedProjectTimes.reduce((totalHours, { hours }) => {
+        return totalHours + Number(hours);
+      }, 0),
+      2
+    );
 
     return (
       <div className="Protime">
-        <form className="pure-form">
+        <form>
           <fieldset>
-            <div className="pure-g config">
-              <input
-                type="number"
-                name="days"
-                placeholder="Days"
-                onChange={this.handleDaysChange}
-                value={this.state.days}
-              />
-
-              <input
-                type="number"
-                name="hoursPerDay"
-                placeholder="Hours per day"
-                onChange={this.handleHoursPerDayChange}
-                value={this.state.hoursPerDay}
-              />
-
-              <button
-                type="button"
-                className="pure-button pure-button-primary"
-                onClick={this.handleAddProjectClick}
-              >
-                Add Project
-              </button>
+            <div className="flex three-600 config">
+              <div>
+                <label>
+                  <input
+                    type="number"
+                    name="days"
+                    placeholder="Days worked"
+                    onChange={this.handleDaysChange}
+                    value={this.state.days}
+                  />
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input
+                    type="number"
+                    name="hoursPerDay"
+                    placeholder="Hours per day"
+                    onChange={this.handleHoursPerDayChange}
+                    value={this.state.hoursPerDay}
+                  />
+                </label>
+              </div>
+              <div>
+                <button type="button" onClick={this.handleAddProjectClick}>
+                  Add Project
+                </button>
+              </div>
             </div>
 
             <table>
