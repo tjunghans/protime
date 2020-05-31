@@ -193,7 +193,7 @@ export class Protime extends React.Component<{}, ProtimeState> {
                 </tr>
               </tfoot>
             </table>
-            {hoursToDaysBookingInstructions.length > 0 ? (
+            {totalHours > 0 ? (
               <div>
                 <h3>Hours Booking Instructions</h3>
                 {hoursToDaysBookingInstructions.map((day, idx) => (
