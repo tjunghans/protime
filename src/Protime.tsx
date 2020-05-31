@@ -64,12 +64,12 @@ export class Protime extends React.Component<{}, ProtimeState> {
       0
     );
 
-    const totalTotalDays = round(calculatedProjectTimes.reduce(
-      (totalTotalDays, { totalDays }) => {
+    const totalTotalDays = round(
+      calculatedProjectTimes.reduce((totalTotalDays, { totalDays }) => {
         return totalTotalDays + Number(totalDays);
-      },
-      0
-    ), 2);
+      }, 0),
+      2
+    );
 
     const totalFullDays = calculatedProjectTimes.reduce(
       (totalFullDays, { fullDays }) => {
@@ -85,11 +85,32 @@ export class Protime extends React.Component<{}, ProtimeState> {
       2
     );
 
+    const hoursToDaysBooking = getHoursToDaysBooking(
+      calculatedProjectTimes.map(({ hours }) => hours)
+    );
+
+    const hoursToDaysBookingInstructions: {
+      name: string;
+      hours: number;
+    }[][] = [];
+    hoursToDaysBooking
+      .filter((day) => !(day.length === 1 && day[0] === 0))
+      .forEach((day, dayCount) => {
+        hoursToDaysBookingInstructions.push([]);
+
+        day.forEach((projectHours, hourCount) => {
+          hoursToDaysBookingInstructions[dayCount].push({
+            name: calculatedProjectTimes[dayCount + hourCount].name,
+            hours: projectHours,
+          });
+        });
+      });
+
     return (
       <div className="Protime">
         <form>
           <fieldset>
-            <div className="flex three-600 config">
+            <div className="flex five-600 config">
               <div>
                 <label>
                   <input
@@ -123,7 +144,7 @@ export class Protime extends React.Component<{}, ProtimeState> {
               <thead>
                 <tr>
                   <th>Project Name</th>
-                  <th>Booking Percentage</th>
+                  <th>Booking %</th>
                   <th>Total Days</th>
                   <th>Full Days</th>
                   <th>Hours</th>
@@ -172,6 +193,23 @@ export class Protime extends React.Component<{}, ProtimeState> {
                 </tr>
               </tfoot>
             </table>
+            {hoursToDaysBookingInstructions.length > 0 ? (
+              <div>
+                <h3>Hours Booking Instructions</h3>
+                {hoursToDaysBookingInstructions.map((day, idx) => (
+                  <div>
+                    <div>Day: {idx + 1}</div>
+                    <div>
+                      {day.map(({ name, hours }) => (
+                        <div>
+                        {name} : {hours}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </fieldset>
         </form>
       </div>
@@ -231,4 +269,42 @@ export class Protime extends React.Component<{}, ProtimeState> {
       }),
     });
   };
+}
+
+function getHoursToDaysBooking(
+  hours: number[],
+  hoursInDay: number = 8.4
+): number[][] {
+  function sum(nums: number[]) {
+    return nums.reduce((sum, a) => {
+      return sum + a;
+    }, 0);
+  }
+
+  const book: number[][] = [];
+  hours
+    .map((hours) => round(hours, 2))
+    .forEach((hours, index) => {
+      if (book.length === 0) {
+        book[0] = [hours];
+        return;
+      }
+
+      const latestBook = book[book.length - 1];
+      const day = sum(latestBook);
+
+      if (day === hoursInDay) {
+        book.push([hours]);
+      }
+      if (day < hoursInDay) {
+        if (day + hours <= hoursInDay) {
+          latestBook.push(hours);
+          return;
+        }
+        latestBook.push(round(hoursInDay - day, 2));
+        book.push([round(day + hours - hoursInDay, 2)]);
+      }
+    }, []);
+
+  return book;
 }
