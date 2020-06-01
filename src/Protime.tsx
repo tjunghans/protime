@@ -133,19 +133,28 @@ export class Protime extends React.Component<{}, ProtimeState> {
                   />
                 </label>
               </div>
-              <div>
-                <button type="button" onClick={this.handleAddProjectClick}>
-                  Add Project
-                </button>
-              </div>
             </div>
 
             <table>
               <thead>
                 <tr>
-                  <th>Project Name</th>
-                  <th>Booking %</th>
-                  <th>Total Days</th>
+                  <th>
+                    <div
+                      data-tooltip="The name of the project you are booking time on."
+                      className="tooltip-top"
+                    >
+                      Project Name
+                    </div>
+                  </th>
+                  <th>
+                    <div
+                      data-tooltip={`The percentage of the days (${this.state.days}) of the project you are booking time on.`}
+                      className="tooltip-top"
+                    >
+                      Booking %
+                    </div>
+                  </th>
+                  <th>Days</th>
                   <th>Full Days</th>
                   <th>Hours</th>
                   <th>&nbsp;</th>
@@ -175,7 +184,9 @@ export class Protime extends React.Component<{}, ProtimeState> {
               </tbody>
               <tfoot>
                 <tr>
-                  <td>Totals</td>
+                  <td>
+                    <div>Totals</div>
+                  </td>
                   <td>
                     <div className={totalPercent !== 100 ? "invalid" : ""}>
                       {totalPercent}
@@ -190,19 +201,24 @@ export class Protime extends React.Component<{}, ProtimeState> {
                   <td>
                     <div>{totalHours}</div>
                   </td>
+                  <td>
+                    <button type="button" onClick={this.handleAddProjectClick}>
+                      Add
+                    </button>
+                  </td>
                 </tr>
               </tfoot>
             </table>
             {totalHours > 0 ? (
-              <div>
-                <h3>Hours Booking Instructions</h3>
+              <div className="day-booking-instructions">
+                <h3>Booking Instructions for {totalHours} h</h3>
                 {hoursToDaysBookingInstructions.map((day, idx) => (
                   <div>
-                    <div>Day: {idx + 1}</div>
+                    <div>Day {idx + 1}</div>
                     <div>
                       {day.map(({ name, hours }) => (
                         <div>
-                        {name} : {hours}
+                          {name} : {hours} h
                         </div>
                       ))}
                     </div>
